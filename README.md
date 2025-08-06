@@ -2,21 +2,23 @@
 
 PDF Measure Viewer — bu Vue 3 + TypeScript + TailwindCSS yordamida yaratilgan ochiq manbali web ilova bo'lib, foydalanuvchilarga PDF chizmalarini ko'rish va nuqtalar orasidagi masofani o'lchash imkonini beradi.
 
-## ✨ Asosiy Xususiyatlar
+**English**: PDF Measure Viewer is an open-source web application built with Vue 3 + TypeScript + TailwindCSS that allows users to view PDF drawings and measure distances between points.
 
-### 📄 PDF Ko'rish
+## ✨ Asosiy Xususiyatlar / Key Features
+
+### 📄 PDF Ko'rish / PDF Viewing
 - **Aniq PDF rendering** – PDF.js yordamida yuqori sifatli ko'rsatish
 - **Sahifa navigatsiyasi** – oldingi/keyingi sahifaga o'tish
 - **Zoom funksiyasi** – 10% dan 300% gacha
 - **Instant preview** – fayl tanlangach darhol ochiladi
 
-### 📏 O'lchash Imkoniyatlari
+### 📏 O'lchash Imkoniyatlari / Measurement Capabilities
 - **Nuqta belgilash** – birinchi va ikkinchi nuqtalarni tanlash
 - **Avtomatik masofa hisoblash** – piksel (px) birligida
 - **Dynamic overlay** – chizma ustiga real vaqtli chiziq va o'lchov chiqarish
 - **Yangi o'lchov bilan tozalash** – yangi nuqta bosilsa, eski o'lchovlar yo'q qilinadi
 
-### 🖥️ Interfeys
+### 🖥️ Interfeys / Interface
 - **Tailwind CSS dizayn** – zamonaviy va minimalistik ko'rinish
 - **Responsive** – har xil qurilmalarda mos ko'rinadi
 - **Intuitiv UI** – oddiy va foydalanuvchi uchun qulay
@@ -24,86 +26,88 @@ PDF Measure Viewer — bu Vue 3 + TypeScript + TailwindCSS yordamida yaratilgan 
 ## 🚀 Live Demo
 🔗 **Ishchi demo**: https://pdf-measure.vercel.app/
 
-## 🧰 Texnologiyalar
+## 🧰 Texnologiyalar / Technologies
 
-| Texnologiya | Tavsif |
+| Texnologiya / Technology | Tavsif / Description |
 |-------------|--------|
 | Vue 3 | Frontend framework |
-| TypeScript | Tip xavfsizligi |
-| Vite | Tez va yengil dev server |
+| TypeScript | Tip xavfsizligi / Type safety |
+| Vite | Tez va yengil dev server / Fast dev server |
 | Tailwind CSS | Utility-first CSS framework |
 | PDF.js | PDF rendering engine |
 
-## 📦 O'rnatish
+## 🚀 Boshlash / Getting Started
 
-### Talablar
+### Talablar / Requirements
 - Node.js v14+
-- npm yoki yarn
+- npm yoki yarn / npm or yarn
 
-### Boshlanish
+### O'rnatish / Installation
 
 ```bash
-# 1. Repozitoriyani klon qiling
+# 1. Repozitoriyani klon qiling / Clone the repository
 git clone https://github.com/warmergroup/pdf-measure-viewer.git
 cd pdf-measure-viewer
 
-# 2. Bog'liqlarni o'rnating
+# 2. Bog'liqlarni o'rnating / Install dependencies
 npm install
 
-# 3. Development serverni ishga tushiring
+# 3. Development serverni ishga tushiring / Start development server
 npm run dev
 ```
 
-🔗 **Ochiladi**: http://localhost:5173
+🔗 **Ochiladi / Opens at**: http://localhost:5173
 
 ### Production build
 ```bash
 npm run build
 ```
 
-## 🖱️ Foydalanish Qo'llanmasi
+## 🖱️ Foydalanish / Usage
 
-### 📁 PDF Yuklash
-- Fayl tanlang (maksimum 50MB)
-- Ilova avtomatik yuklab, PDF ni ko'rsatadi
+### 📁 PDF Yuklash / PDF Upload
+- Fayl tanlang (maksimum 50MB) / Select file (max 50MB)
+- Ilova avtomatik yuklab, PDF ni ko'rsatadi / App automatically loads and displays PDF
 
-### ⬅️➡️ Sahifalar Oralig'ida Harakat
-- Klaviaturadagi ← va → tugmalari orqali
+### ⬅️➡️ Sahifalar Oralig'ida Harakat / Page Navigation
+- Klaviaturadagi ← va → tugmalari orqali / Using keyboard ← and → keys
 
-### 🔍 Zoom Nisbati
-- + va – tugmalari yoki interfeysdagi zoom tugmalari orqali
-- 10% dan 300% gacha sozlanadi
+### 🔍 Zoom Nisbati / Zoom Ratio
+- + va – tugmalari yoki interfeysdagi zoom tugmalari orqali / Using + and – keys or interface zoom buttons
+- 10% dan 300% gacha sozlanadi / Adjustable from 10% to 300%
 
-### 📐 O'lchash
-- Birinchi nuqtani bosing (qizil marker)
-- Ikkinchi nuqtani bosing (yashil marker)
-- Masofa avtomatik ravishda ko'rsatiladi (px da)
+### 📐 O'lchash / Measurement
+- Birinchi nuqtani bosing (qizil marker) / Click first point (red marker)
+- Ikkinchi nuqtani bosing (yashil marker) / Click second point (green marker)
+- Masofa avtomatik ravishda ko'rsatiladi (px da) / Distance automatically displayed (in px)
 
-### 🧹 Tozalash
-- "O'lchovni tozalash" tugmasi orqali chizma tozalanadi
+### 🧹 Tozalash / Clear
+- "O'lchovni tozalash" tugmasi orqali chizma tozalanadi / Clear measurements using "Clear measurements" button
 
-## 🗂 Loyiha Tuzilishi
+## 🔧 Texnik Ma'lumotlar / Technical Details
+
+### Loyiha Tuzilishi / Project Structure
 
 ```
 pdf-measure-viewer/
 ├── public/
 │   └── index.html             # HTML template
 ├── src/
-│   ├── assets/                # Tailwind CSS, rasmlar
+│   ├── assets/                # Tailwind CSS, rasmlar / Images
 │   ├── components/
-│   │   └── PdfViewer.vue      # Asosiy pdf va o'lchov komponenti
+│   │   └── PdfViewer.vue      # Asosiy pdf va o'lchov komponenti / Main PDF viewer component
 │   ├── views/
-│   │   └── Home.vue           # Kirish interfeysi
-│   ├── App.vue                # Root komponent
-│   └── main.ts                # Kirish nuqtasi
+│   │   └── Home.vue           # Kirish interfeysi / Entry interface
+│   ├── App.vue                # Root komponent / Root component
+│   └── main.ts                # Kirish nuqtasi / Entry point
 ├── tailwind.config.js
 ├── vite.config.ts
 └── package.json
 ```
 
-## 🔧 Konfiguratsiya
+### Konfiguratsiya / Configuration
 
-### Tailwind
+#### Tailwind
 ```javascript
 // tailwind.config.js
 module.exports = {
@@ -113,7 +117,7 @@ module.exports = {
 }
 ```
 
-### Vite
+#### Vite
 ```typescript
 // vite.config.ts
 import { defineConfig } from 'vite'
@@ -124,47 +128,64 @@ export default defineConfig({
 })
 ```
 
-## 🐞 Muammolar va Xatoliklar
+## 🐞 Xatoliklar / Troubleshooting
 
-### ✅ Oddiy muammolar
+### ✅ Oddiy muammolar / Common Issues
 
-| Muammo | Yechim |
+| Muammo / Issue | Yechim / Solution |
 |--------|--------|
-| PDF ko'rinmayapti | Faqat .pdf fayl tanlang |
-| Zoom ishlamaydi | Brauzerni yangilang yoki cache tozalang |
-| O'lchov ishlamaydi | Sahifada PDF to'liq yuklanganiga ishonch hosil qiling |
-| Fayl katta | 50MB dan kichik fayllarni tanlang |
+| PDF ko'rinmayapti / PDF not visible | Faqat .pdf fayl tanlang / Select only .pdf files |
+| Zoom ishlamaydi / Zoom not working | Brauzerni yangilang yoki cache tozalang / Refresh browser or clear cache |
+| O'lchov ishlamaydi / Measurement not working | Sahifada PDF to'liq yuklanganiga ishonch hosil qiling / Ensure PDF is fully loaded |
+| Fayl katta / File too large | 50MB dan kichik fayllarni tanlang / Select files smaller than 50MB |
 
-## 🔜 Rejalashtirilgan Yangi Funksiyalar
+### Development muammolari / Development Issues
 
-- [ ] **Masshtab kalibrovkasi** (1:100, 1:50, real birliklar bilan)
-- [ ] **Ko'p nuqtali o'lchov** (poligon yoki chiziq)
-- [ ] **Saqlash va eksport** (PNG yoki JSON)
-- [ ] **Qorong'i rejim** (dark mode)
+1. **Tailwind CSS xatosi / Tailwind CSS error**
+   ```bash
+   npm run dev
+   ```
+   - `@apply` direktivalarini to'g'ri ishlatish / Use `@apply` directives correctly
 
-## 🤝 Hissa Qo'shish
+2. **TypeScript xatolari / TypeScript errors**
+   ```bash
+   npm run type-check
+   ```
 
-Taklifingiz bormi? Xush kelibsiz!
+## 🔜 Rejalashtirilgan Yangi Funksiyalar / Planned Features
+
+- [ ] **Masshtab kalibrovkasi** (1:100, 1:50, real birliklar bilan) / **Scale calibration** (1:100, 1:50, with real units)
+- [ ] **Ko'p nuqtali o'lchov** (poligon yoki chiziq) / **Multi-point measurement** (polygon or line)
+- [ ] **Saqlash va eksport** (PNG yoki JSON) / **Save and export** (PNG or JSON)
+- [ ] **Qorong'i rejim** (dark mode) / **Dark mode**
+
+## 🤝 Hissa Qo'shish / Contributing
+
+Taklifingiz bormi? Xush kelibsiz! / Have suggestions? Welcome!
 
 ```bash
-# Fork qiling
+# Fork qiling / Fork the repository
 git checkout -b feature/my-feature
 git commit -m 'Add my feature'
 git push origin feature/my-feature
-# Pull Request yuboring
+# Pull Request yuboring / Submit Pull Request
 ```
 
-## 📄 Litsenziya
+## 📄 Litsenziya / License
 
 Bu loyiha MIT litsenziyasi asosida taqdim etiladi. Bepul foydalaning, o'zgartiring va tarqating.
 
-## 📬 Aloqa
+This project is provided under MIT license. Use freely, modify and distribute.
 
-Agar savollar, muammolar yoki takliflaringiz bo'lsa:
+## 📬 Aloqa / Contact
 
-- GitHub Issues orqali murojaat qiling
-- Yoki youremail@example.com ga yozing
+Agar savollar, muammolar yoki takliflaringiz bo'lsa / If you have questions, issues or suggestions:
+
+- GitHub Issues orqali murojaat qiling / Contact via GitHub Issues
+- ulugbekjonsultonov4@gmail.com ga yoki zetcoder@mail.ru ga yozing / Write to ulugbekjonsultonov4@gmail.com or zetcoder@mail.ru
 
 ---
 
 Ushbu dastur PDF chizmalarni o'rganish va o'lchashni qulaylashtirish uchun mo'ljallangan. Professional texnik o'lchovlar uchun maxsus dasturiy ta'minotlar tavsiya qilinadi.
+
+This application is designed to facilitate the study and measurement of PDF drawings. Special software is recommended for professional technical measurements.
