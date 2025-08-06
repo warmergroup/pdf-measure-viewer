@@ -1,136 +1,120 @@
-# 📐 PDF Chizma O'lchash Dasturi
+# 📐 PDF Measure Viewer
 
-Bu Vue.js 3 da yaratilgan PDF chizmalarini ko'rish va o'lchash uchun mo'ljallangan web ilovasi. Foydalanuvchilar PDF fayllarini yuklab, ko'rish, kattalashtirish/kichiklashtirish va chizmadagi nuqtalar orasidagi masofani o'lchash imkoniyatiga ega.
+PDF Measure Viewer — bu Vue 3 + TypeScript + TailwindCSS yordamida yaratilgan ochiq manbali web ilova bo'lib, foydalanuvchilarga PDF chizmalarini ko'rish va nuqtalar orasidagi masofani o'lchash imkonini beradi.
 
 ## ✨ Asosiy Xususiyatlar
 
 ### 📄 PDF Ko'rish
-- **Yuqori sifatli rendering** - PDF fayllar aniq va tiniq ko'rsatiladi
-- **Sahifa navigatsiya** - Oldingi/keyingi sahifalarga o'tish
-- **Zoom funksiyasi** - 10% dan 300% gacha kattalashtirish/kichiklashtirish
-- **Darhol ko'rsatish** - PDF fayl tanlangani bilan darhol ko'rsatiladi
+- **Aniq PDF rendering** – PDF.js yordamida yuqori sifatli ko'rsatish
+- **Sahifa navigatsiyasi** – oldingi/keyingi sahifaga o'tish
+- **Zoom funksiyasi** – 10% dan 300% gacha
+- **Instant preview** – fayl tanlangach darhol ochiladi
 
-### 📏 O'lchash Funksiyalari
-- **Nuqta belgilash** - Chizmadagi istalgan nuqtalarni belgilash
-- **Masofa hisoblash** - Ikki nuqta orasidagi masofani avtomatik hisoblash
-- **Piksel ko'rsatish** - Masofa piksel (px) da ko'rsatiladi
-- **Masshtab hisoblash** - Turli masshtablarda real masofani hisoblash
+### 📏 O'lchash Imkoniyatlari
+- **Nuqta belgilash** – birinchi va ikkinchi nuqtalarni tanlash
+- **Avtomatik masofa hisoblash** – piksel (px) birligida
+- **Dynamic overlay** – chizma ustiga real vaqtli chiziq va o'lchov chiqarish
+- **Yangi o'lchov bilan tozalash** – yangi nuqta bosilsa, eski o'lchovlar yo'q qilinadi
 
-### 🎨 Foydalanuvchi Interfeysi
-- **Zamonaviy dizayn** - Tailwind CSS bilan chiroyli interfeys
-- **Responsive** - Har xil qurilmalarda yaxshi ko'rinadi
-- **Intuitiv** - Oson va tushunarli foydalanish
+### 🖥️ Interfeys
+- **Tailwind CSS dizayn** – zamonaviy va minimalistik ko'rinish
+- **Responsive** – har xil qurilmalarda mos ko'rinadi
+- **Intuitiv UI** – oddiy va foydalanuvchi uchun qulay
 
-## 🚀 O'rnatish va Ishlatish
+## 🚀 Live Demo
+🔗 **Ishchi demo**: https://pdf-measure.vercel.app/
+
+## 🧰 Texnologiyalar
+
+| Texnologiya | Tavsif |
+|-------------|--------|
+| Vue 3 | Frontend framework |
+| TypeScript | Tip xavfsizligi |
+| Vite | Tez va yengil dev server |
+| Tailwind CSS | Utility-first CSS framework |
+| PDF.js | PDF rendering engine |
+
+## 📦 O'rnatish
 
 ### Talablar
-- Node.js (14.0 yoki undan yuqori)
+- Node.js v14+
 - npm yoki yarn
 
-### O'rnatish
+### Boshlanish
 
-1. **Loyihani klonlash**
 ```bash
+# 1. Repozitoriyani klon qiling
 git clone https://github.com/warmergroup/pdf-measure-viewer.git
-cd pdf-measure
-```
+cd pdf-measure-viewer
 
-2. **Bog'liqlarni o'rnatish**
-```bash
+# 2. Bog'liqlarni o'rnating
 npm install
-```
 
-3. **Development serverini ishga tushirish**
-```bash
+# 3. Development serverni ishga tushiring
 npm run dev
 ```
 
-4. **Brauzerda ochish**
-```
-http://localhost:5173
-```
+🔗 **Ochiladi**: http://localhost:5173
 
-### Production uchun tayyorlash
+### Production build
 ```bash
 npm run build
 ```
 
-## 📋 Foydalanish Ko'rsatmalari
+## 🖱️ Foydalanish Qo'llanmasi
 
-### 1. PDF Fayl Yuklash
-- "PDF Faylni Tanlang" tugmasini bosing
-- PDF formatidagi faylni tanlang (maksimal 50MB)
-- Fayl avtomatik ravishda yuklanadi va ko'rsatiladi
+### 📁 PDF Yuklash
+- Fayl tanlang (maksimum 50MB)
+- Ilova avtomatik yuklab, PDF ni ko'rsatadi
 
-### 2. PDF Ko'rish
-- **Sahifa navigatsiya**: ← → tugmalari bilan sahifalar orasida o'tish
-- **Zoom**: + - tugmalari bilan kattalashtirish/kichiklashtirish
-- **Masshtab**: Turli masshtablar (1:1, 1:10, 1:50, 1:100, 1:200, 1:500)
+### ⬅️➡️ Sahifalar Oralig'ida Harakat
+- Klaviaturadagi ← va → tugmalari orqali
 
-### 3. O'lchash
-- **Birinchi nuqta**: Chizmadagi birinchi nuqtani bosing (qizil nuqta)
-- **Ikkinchi nuqta**: Ikkinchi nuqtani bosing (yashil nuqta)
-- **Natija**: Masofa avtomatik hisoblanadi va ko'rsatiladi
-- **Yangi o'lchov**: Yangi nuqta bosilganda eski chiziqlar olib tashlanadi
+### 🔍 Zoom Nisbati
+- + va – tugmalari yoki interfeysdagi zoom tugmalari orqali
+- 10% dan 300% gacha sozlanadi
 
-### 4. Tozalash
-- "O'lchovlarni tozalash" tugmasi bilan barcha o'lchovlarni tozalash
+### 📐 O'lchash
+- Birinchi nuqtani bosing (qizil marker)
+- Ikkinchi nuqtani bosing (yashil marker)
+- Masofa avtomatik ravishda ko'rsatiladi (px da)
 
-## 🛠️ Texnik Ma'lumotlar
+### 🧹 Tozalash
+- "O'lchovni tozalash" tugmasi orqali chizma tozalanadi
 
-### Texnologiyalar
-- **Vue.js 3** - Frontend framework
-- **TypeScript** - Type safety
-- **Vite** - Build tool va development server
-- **Tailwind CSS** - Styling
-- **PDF.js** - PDF rendering
+## 🗂 Loyiha Tuzilishi
 
-### Loyiha Strukturasi
 ```
-vue-project/
+pdf-measure-viewer/
+├── public/
+│   └── index.html             # HTML template
 ├── src/
+│   ├── assets/                # Tailwind CSS, rasmlar
 │   ├── components/
-│   │   └── PdfViewer.vue      # Asosiy PDF ko'ruvchi komponenti
+│   │   └── PdfViewer.vue      # Asosiy pdf va o'lchov komponenti
 │   ├── views/
-│   │   └── Home.vue           # Bosh sahifa
-│   ├── assets/
-│   │   └── main.css           # Global stillar
-│   ├── App.vue                # Asosiy app komponenti
-│   └── main.ts                # App entry point
-├── public/                    # Static fayllar
-├── index.html                 # HTML template
-└── package.json               # Bog'liqlar
+│   │   └── Home.vue           # Kirish interfeysi
+│   ├── App.vue                # Root komponent
+│   └── main.ts                # Kirish nuqtasi
+├── tailwind.config.js
+├── vite.config.ts
+└── package.json
 ```
-
-### Asosiy Komponentlar
-
-#### PdfViewer.vue
-- PDF fayllarni yuklash va render qilish
-- Zoom va navigatsiya funksiyalari
-- O'lchash logikasi
-- Canvas event handling
-
-#### Home.vue
-- Fayl yuklash interfeysi
-- Xatolarni ko'rsatish
-- PdfViewer komponentini boshqarish
 
 ## 🔧 Konfiguratsiya
 
-### Tailwind CSS
+### Tailwind
 ```javascript
 // tailwind.config.js
 module.exports = {
   content: ['./src/**/*.{vue,js,ts,jsx,tsx}'],
-  theme: {
-    extend: {},
-  },
+  theme: { extend: {} },
   plugins: [],
 }
 ```
 
 ### Vite
-```javascript
+```typescript
 // vite.config.ts
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
@@ -140,62 +124,47 @@ export default defineConfig({
 })
 ```
 
-## 🐛 Xatolarni Hal Qilish
+## 🐞 Muammolar va Xatoliklar
 
-### Umumiy Muammolar
+### ✅ Oddiy muammolar
 
-1. **PDF yuklanmaydi**
-   - Fayl formatini tekshiring (faqat PDF)
-   - Fayl hajmini tekshiring (50MB dan kichik)
+| Muammo | Yechim |
+|--------|--------|
+| PDF ko'rinmayapti | Faqat .pdf fayl tanlang |
+| Zoom ishlamaydi | Brauzerni yangilang yoki cache tozalang |
+| O'lchov ishlamaydi | Sahifada PDF to'liq yuklanganiga ishonch hosil qiling |
+| Fayl katta | 50MB dan kichik fayllarni tanlang |
 
-2. **O'lchash ishlamaydi**
-   - Canvas elementiga to'g'ri bosilganini tekshiring
-   - Brauzer console da xatolarni ko'ring
+## 🔜 Rejalashtirilgan Yangi Funksiyalar
 
-3. **Zoom ishlamaydi**
-   - Sahifa to'liq yuklangani bilan kutib turing
-   - Brauzer cache ni tozalang
-
-### Development Muammolari
-
-1. **Tailwind CSS xatosi**
-   ```bash
-   npm run dev
-   ```
-   - `@apply` direktivalarini to'g'ri ishlatish
-
-2. **TypeScript xatolari**
-   ```bash
-   npm run type-check
-   ```
-
-## 📝 O'zgartirishlar Tarixi
-
-### v1.0.0
-- ✅ PDF yuklash va ko'rish
-- ✅ Zoom va navigatsiya
-- ✅ O'lchash funksiyasi
-- ✅ Avtomatik tozalash
-- ✅ Responsive dizayn
+- [ ] **Masshtab kalibrovkasi** (1:100, 1:50, real birliklar bilan)
+- [ ] **Ko'p nuqtali o'lchov** (poligon yoki chiziq)
+- [ ] **Saqlash va eksport** (PNG yoki JSON)
+- [ ] **Qorong'i rejim** (dark mode)
 
 ## 🤝 Hissa Qo'shish
 
-1. Repository ni fork qiling
-2. Feature branch yarating (`git checkout -b feature/amazing-feature`)
-3. O'zgarishlarni commit qiling (`git commit -m 'Add amazing feature'`)
-4. Branch ni push qiling (`git push origin feature/amazing-feature`)
-5. Pull Request yarating
+Taklifingiz bormi? Xush kelibsiz!
+
+```bash
+# Fork qiling
+git checkout -b feature/my-feature
+git commit -m 'Add my feature'
+git push origin feature/my-feature
+# Pull Request yuboring
+```
 
 ## 📄 Litsenziya
 
-Bu loyiha MIT litsenziyasi ostida tarqatiladi.
+Bu loyiha MIT litsenziyasi asosida taqdim etiladi. Bepul foydalaning, o'zgartiring va tarqating.
 
-## 📞 Aloqa
+## 📬 Aloqa
 
-Savollar yoki takliflar uchun:
-- GitHub Issues oching
-- Email: [your-email@example.com]
+Agar savollar, muammolar yoki takliflaringiz bo'lsa:
+
+- GitHub Issues orqali murojaat qiling
+- Yoki youremail@example.com ga yozing
 
 ---
 
-**Eslatma**: Bu dastur PDF chizmalarini ko'rish va o'lchash uchun mo'ljallangan. Muhim loyihalar uchun qo'shimcha tekshiruvlar o'tkazish tavsiya etiladi.
+Ushbu dastur PDF chizmalarni o'rganish va o'lchashni qulaylashtirish uchun mo'ljallangan. Professional texnik o'lchovlar uchun maxsus dasturiy ta'minotlar tavsiya qilinadi.
