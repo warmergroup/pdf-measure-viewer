@@ -1,10 +1,53 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="en">
   <head>
     <meta charset="UTF-8">
     <link rel="icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Binokor</title>
+    
+    <!-- Primary Meta Tags -->
+    <title>PDF Measure Viewer - Free Online PDF Drawing Measurement Tool</title>
+    <meta name="title" content="PDF Measure Viewer - Free Online PDF Drawing Measurement Tool">
+    <meta name="description" content="Free online tool for viewing PDF drawings and measuring distances between points. Built with Vue 3, TypeScript, and Tailwind CSS. No registration required.">
+    <meta name="keywords" content="PDF viewer, PDF measurement, drawing measurement, online PDF tool, distance measurement, PDF drawing, free PDF tool, Vue 3, TypeScript, Tailwind CSS">
+    <meta name="author" content="PDF Measure Viewer">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pdf-measure.vercel.app/">
+    <meta property="og:title" content="PDF Measure Viewer - Free Online PDF Drawing Measurement Tool">
+    <meta property="og:description" content="Free online tool for viewing PDF drawings and measuring distances between points. Built with Vue 3, TypeScript, and Tailwind CSS. No registration required.">
+    <meta property="og:image" content="https://pdf-measure.vercel.app/og-image.png">
+    <meta property="og:site_name" content="PDF Measure Viewer">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://pdf-measure.vercel.app/">
+    <meta property="twitter:title" content="PDF Measure Viewer - Free Online PDF Drawing Measurement Tool">
+    <meta property="twitter:description" content="Free online tool for viewing PDF drawings and measuring distances between points. Built with Vue 3, TypeScript, and Tailwind CSS. No registration required.">
+    <meta property="twitter:image" content="https://pdf-measure.vercel.app/og-image.png">
+    
+    <!-- Additional Meta Tags -->
+    <meta name="theme-color" content="#2563eb">
+    <meta name="msapplication-TileColor" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="PDF Measure Viewer">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://pdf-measure.vercel.app/">
+    
+    <!-- Manifest for PWA -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    
     <!-- PDF.js CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <!-- PDF.js worker -->
@@ -12,6 +55,35 @@
       window.pdfjsLib = window.pdfjsLib || {};
       window.pdfjsLib.GlobalWorkerOptions = window.pdfjsLib.GlobalWorkerOptions || {};
       window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "PDF Measure Viewer",
+      "description": "Free online tool for viewing PDF drawings and measuring distances between points",
+      "url": "https://pdf-measure.vercel.app/",
+      "applicationCategory": "DesignApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "PDF Measure Viewer"
+      },
+      "featureList": [
+        "PDF viewing and navigation",
+        "Distance measurement between points",
+        "Zoom functionality",
+        "Real-time measurement overlay",
+        "No registration required"
+      ]
+    }
     </script>
   </head>
   <body>
