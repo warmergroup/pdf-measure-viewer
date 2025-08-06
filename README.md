@@ -26,6 +26,16 @@ PDF Measure Viewer is an open-source web application built with Vue 3 + TypeScri
 ## 🚀 Live Demo
 🔗 **Demo**: https://pdf-measure.vercel.app/
 
+### 📱 Social Media Sharing
+The website is optimized for sharing on social media platforms:
+
+- **Telegram**: Rich preview with image and description
+- **WhatsApp**: Full preview with title and image
+- **Facebook**: Open Graph optimized with large image
+- **Twitter**: Twitter Cards with summary_large_image
+- **LinkedIn**: Professional sharing with company branding
+- **Pinterest**: Rich pin support for visual discovery
+
 ## 🧰 Technologies / Texnologiyalar
 
 | Technology / Texnologiya | Description / Tavsif |
