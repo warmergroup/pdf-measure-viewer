@@ -182,7 +182,8 @@ Bu loyiha MIT litsenziyasi asosida taqdim etiladi. Bepul foydalaning, o'zgartiri
 If you have questions, issues or suggestions / Agar savollar, muammolar yoki takliflaringiz bo'lsa:
 
 - Contact via GitHub Issues / GitHub Issues orqali murojaat qiling
-- Write to ulugbekjonsultonov4@gmail.com or zetcoder@mail.ru / ulugbekjonsultonov4@gmail.com ga yoki zetcoder@mail.ru ga yozing
+- Write to ulugbekjonsultonov4@gmail.com or zetcoder@mail.ru
+- ulugbekjonsultonov4@gmail.com ga yoki zetcoder@mail.ru ga yozing
 
 ---
 
