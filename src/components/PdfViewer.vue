@@ -25,6 +25,71 @@ let currentRenderTask: any = null
 let currentRenderTaskTimeout: number | null = null
 let isRendering = ref<boolean>(false)
 
+// Sahifa cache va preloading
+let pageCache = new Map<number, any>()
+let preloadQueue: number[] = []
+let isPreloading = ref<boolean>(false)
+
+/**
+ * Sahifani cache dan olish yoki yangi yuklash
+ */
+const getPage = async (pageNumber: number) => {
+  // Cache dan tekshirish
+  if (pageCache.has(pageNumber)) {
+    return pageCache.get(pageNumber)
+  }
+
+  // Yangi sahifani yuklash
+  const page = await pdfDoc.getPage(pageNumber)
+  pageCache.set(pageNumber, page)
+
+  // Cache hajmini cheklash (max 5 sahifa)
+  if (pageCache.size > 5) {
+    const firstKey = pageCache.keys().next().value
+    if (firstKey !== undefined) {
+      pageCache.delete(firstKey)
+    }
+  }
+
+  return page
+}
+
+/**
+ * Keyingi sahifalarni oldindan yuklash
+ */
+const preloadPages = async () => {
+  if (isPreloading.value || !pdfDoc) return
+
+  isPreloading.value = true
+  const pagesToPreload = []
+
+  // Joriy sahifadan keyingi 2 sahifani
+  for (let i = currentPage.value + 1; i <= Math.min(currentPage.value + 2, totalPages.value); i++) {
+    if (!pageCache.has(i)) {
+      pagesToPreload.push(i)
+    }
+  }
+
+  // Joriy sahifadan oldingi 1 sahifani
+  for (let i = currentPage.value - 1; i >= Math.max(currentPage.value - 1, 1); i--) {
+    if (!pageCache.has(i)) {
+      pagesToPreload.push(i)
+    }
+  }
+
+  // Sahifalarni parallel yuklash
+  await Promise.all(pagesToPreload.map(async (pageNum) => {
+    try {
+      const page = await pdfDoc.getPage(pageNum)
+      pageCache.set(pageNum, page)
+    } catch (error) {
+      console.warn(`Sahifa ${pageNum} yuklashda xato:`, error)
+    }
+  }))
+
+  isPreloading.value = false
+}
+
 /**
  * PDF faylni yuklash
  */
@@ -32,6 +97,17 @@ const loadPdf = async () => {
   try {
     isLoading.value = true
     errorMessage.value = ''
+
+    // Sahifa cache ni tozalash
+    pageCache.clear()
+    isPreloading.value = false
+
+    // Canvas elementini tekshirish
+    if (!canvasRef.value) {
+      console.error('Canvas elementi mavjud emas')
+      errorMessage.value = 'Canvas elementi mavjud emas'
+      return
+    }
 
     // PDF faylni yuklash
     const arrayBuffer = await props.file.arrayBuffer()
@@ -48,7 +124,15 @@ const loadPdf = async () => {
 
       if (container) {
         const containerWidth = container.clientWidth - 48 // padding hisobga olingan
-        zoomLevel.value = containerWidth / originalViewport.width
+        if (containerWidth > 0) {
+          zoomLevel.value = containerWidth / originalViewport.width
+        } else {
+          // Default zoom level
+          zoomLevel.value = 1.0
+        }
+      } else {
+        // Default zoom level
+        zoomLevel.value = 1.0
       }
     }
 
@@ -81,19 +165,36 @@ const renderPage = async () => {
       currentRenderTask = null
     }
 
-    // PDF sahifasini olish
-    const page = await pdfDoc.getPage(currentPage.value)
+    // PDF sahifasini cache dan olish
+    const page = await getPage(currentPage.value)
 
     // Canvas va container elementlarini olish
     const canvas = canvasRef.value
+    if (!canvas) {
+      console.error('Canvas elementi topilmadi')
+      errorMessage.value = 'Canvas elementi topilmadi'
+      return
+    }
+
     const container = canvas.parentElement
-    if (!container) return
+    if (!container) {
+      console.error('Canvas container elementi topilmadi')
+      errorMessage.value = 'Canvas container elementi topilmadi'
+      return
+    }
 
     // Container o'lchamlarini olish
     const containerStyle = window.getComputedStyle(container)
     const paddingLeft = parseInt(containerStyle.paddingLeft) || 0
     const paddingRight = parseInt(containerStyle.paddingRight) || 0
     const containerWidth = container.clientWidth - paddingLeft - paddingRight
+
+    // Container o'lchamini tekshirish
+    if (containerWidth <= 0) {
+      console.error('Container o\'lchami noto\'g\'ri:', containerWidth)
+      errorMessage.value = 'Container o\'lchami noto\'g\'ri'
+      return
+    }
 
     // PDF original o'lchamlarini olish
     const originalViewport = page.getViewport({ scale: 1.0 })
@@ -106,7 +207,11 @@ const renderPage = async () => {
     const viewport = page.getViewport({ scale: finalScale })
 
     const context = canvas.getContext('2d')
-    if (!context) return
+    if (!context) {
+      console.error('Canvas context olinmadi')
+      errorMessage.value = 'Canvas context olinmadi'
+      return
+    }
 
     // Canvas o'lchamlarini o'rnatish
     canvas.height = viewport.height
@@ -139,6 +244,12 @@ const renderPage = async () => {
         drawMeasurementPoints()
       }
 
+      // Keyingi sahifalarni oldindan yuklash
+      preloadPages()
+
+      // Xatolik xabarini tozalash
+      errorMessage.value = ''
+
     } catch (error: any) {
       if (error?.message !== 'Rendering cancelled') {
         console.error('Sahifa render xatosi:', error)
@@ -156,20 +267,20 @@ const renderPage = async () => {
 /**
  * Keyingi sahifaga o'tish
  */
-const nextPage = () => {
+const nextPage = async () => {
   if (currentPage.value < totalPages.value) {
     currentPage.value++
-    renderPage()
+    await renderPage()
   }
 }
 
 /**
  * Oldingi sahifaga o'tish
  */
-const prevPage = () => {
+const prevPage = async () => {
   if (currentPage.value > 1) {
     currentPage.value--
-    renderPage()
+    await renderPage()
   }
 }
 
@@ -376,28 +487,44 @@ const clearCanvasOverlay = () => {
 }
 
 // Fayl o'zgarganda PDF ni qayta yuklash
-watch(() => props.file, (newFile) => {
+watch(() => props.file, async (newFile) => {
   if (newFile) {
-    loadPdf()
+    // Canvas elementini tekshirish
+    if (canvasRef.value) {
+      await loadPdf()
+    } else {
+      console.error('Canvas elementi watch da mavjud emas')
+      errorMessage.value = 'Canvas elementi yuklanmadi'
+    }
   }
 }, { immediate: true })
 
-onMounted(() => {
+onMounted(async () => {
+  // DOM rendering kutish
+  await nextTick()
+
   if (props.file) {
-    loadPdf()
+    // Canvas elementini tekshirish
+    if (canvasRef.value) {
+      await loadPdf()
+    } else {
+      console.error('Canvas elementi onMounted da mavjud emas')
+      errorMessage.value = 'Canvas elementi yuklanmadi'
+    }
   }
 })
 </script>
 
 <template>
-  <div class="bg-white rounded-xl shadow-sm border border-gray-200 flex">
-    <!-- Toolbar -->
-    <div class="bg-gray-50 border-r border-gray-200 p-4 flex flex-col gap-6 w-[240px]">
-      <!-- Sahifa navigatsiya -->
-      <div class="space-y-2">
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col lg:flex-row">
+    <!-- Toolbar - Mobile/Tablet: Top, Desktop: Left -->
+    <div
+      class="bg-gray-50 border-b lg:border-b-0 lg:border-r border-gray-200 p-4 lg:p-4 flex flex-row lg:flex-col gap-4 lg:gap-6 w-full lg:w-[240px]">
+      <!-- Sahifa navigatsiya - Mobile/Tablet: Bottom, Desktop: Top -->
+      <div class="hidden lg:block space-y-2">
         <div class="text-sm text-gray-600 font-medium mb-2">Sahifa</div>
         <div class="flex items-center justify-between px-2">
-          <button @click="prevPage" :disabled="currentPage <= 1" class="btn">
+          <button @click="prevPage" :disabled="currentPage <= 1 || isRendering" class="btn">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
             </svg>
@@ -405,7 +532,7 @@ onMounted(() => {
 
           <span class="text-sm font-medium">{{ currentPage }} / {{ totalPages }}</span>
 
-          <button @click="nextPage" :disabled="currentPage >= totalPages" class="btn">
+          <button @click="nextPage" :disabled="currentPage >= totalPages || isRendering" class="btn">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
             </svg>
@@ -414,20 +541,20 @@ onMounted(() => {
       </div>
 
       <!-- Zoom -->
-      <div class="space-y-2">
+      <div class="space-y-2 flex-1">
         <div class="text-sm text-gray-600 font-medium">Masshtab</div>
         <div class="flex items-center justify-between px-2">
-          <button @click="zoomOut" :disabled="zoomLevel <= 0.1" class="btn">−</button>
+          <button @click="zoomOut" :disabled="zoomLevel <= 0.1" class="btn-mobile lg:btn">−</button>
           <span class="text-sm font-medium">{{ Math.round(zoomLevel * 100) }}%</span>
-          <button @click="zoomIn" :disabled="zoomLevel >= 3.0" class="btn">+</button>
+          <button @click="zoomIn" :disabled="zoomLevel >= 3.0" class="btn-mobile lg:btn">+</button>
         </div>
       </div>
 
       <!-- O'lchash -->
-      <div class="space-y-2">
+      <div class="space-y-2 flex-1">
         <div class="text-sm text-gray-600 font-medium">O'lchash</div>
         <div class="flex flex-col gap-2">
-          <select v-model="scale" class="select w-full">
+          <select v-model="scale" class="select-mobile lg:select w-full">
             <option value="1:1">1:1</option>
             <option value="1:10">1:10</option>
             <option value="1:50">1:50</option>
@@ -436,40 +563,65 @@ onMounted(() => {
             <option value="1:500">1:500</option>
           </select>
 
-          <button @click="clearMeasurement" class="btn w-full justify-center">
+          <button @click="clearMeasurement" class="btn-mobile lg:btn w-full justify-center">
             O'lchovlarni tozalash
           </button>
         </div>
       </div>
-
-      <!-- O'lchov ma'lumotlari -->
-      <!-- <div v-if="distance > 0" class="p-3 bg-blue-50 rounded-lg text-sm">
-        <div class="font-medium mb-1">Masofa:</div>
-        <div class="flex items-center gap-2">
-          <span class="font-medium">{{ distance }}px</span>
-          <template v-if="realDistance">
-            <span class="text-gray-500">≈</span>
-            <span class="font-medium">{{ realDistance }}</span>
-          </template>
-</div>
-</div> -->
     </div>
 
     <!-- PDF Viewer -->
-    <div class="pdf-container">
+    <div class="pdf-container flex-1">
       <!-- Yuklash indikatori -->
       <div v-if="isLoading" class="loading">
         <div class="loader"></div>
         <p>PDF yuklanmoqda...</p>
       </div>
 
+      <!-- Sahifa yuklash indikatori -->
+      <div v-else-if="isRendering" class="loading">
+        <div class="loader"></div>
+        <p>Sahifa {{ currentPage }} yuklanmoqda...</p>
+      </div>
+
       <!-- Xato xabari -->
       <div v-else-if="errorMessage" class="error">
-        {{ errorMessage }}
+        <div class="flex items-center justify-center">
+          <svg class="w-5 h-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+              clip-rule="evenodd"></path>
+          </svg>
+          <span>{{ errorMessage }}</span>
+        </div>
+        <div class="mt-2 text-xs text-gray-500">
+          Canvas: {{ canvasRef ? 'Mavjud' : 'Mavjud emas' }} |
+          PDF: {{ pdfDoc ? 'Yuklangan' : 'Yuklanmagan' }} |
+          Sahifa: {{ currentPage }}/{{ totalPages }}
+        </div>
       </div>
 
       <!-- PDF Canvas -->
       <canvas v-else ref="canvasRef" @click="handleCanvasClick" class="measuring"></canvas>
+    </div>
+
+    <!-- Mobile Navigation - Bottom -->
+    <div class="lg:hidden bg-gray-50 border-t border-gray-200 p-4">
+      <div class="flex items-center justify-between">
+        <button @click="prevPage" :disabled="currentPage <= 1 || isRendering" class="btn-mobile">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+
+        <span class="text-sm font-medium">{{ currentPage }} / {{ totalPages }}</span>
+
+        <button @click="nextPage" :disabled="currentPage >= totalPages || isRendering" class="btn-mobile">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -485,6 +637,14 @@ onMounted(() => {
   display: flex;
   align-items: flex-start;
   justify-content: center;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 1023px) {
+  .pdf-container {
+    height: calc(100vh - 200px);
+    padding: 1rem;
+  }
 }
 
 canvas {
@@ -503,6 +663,7 @@ canvas {
   cursor: crosshair !important;
 }
 
+/* Desktop buttons */
 .btn {
   padding: 0.5rem;
   border-radius: 0.375rem;
@@ -522,6 +683,33 @@ canvas {
   cursor: not-allowed;
 }
 
+/* Mobile buttons */
+.btn-mobile {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  background: white;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.875rem;
+  font-weight: 500;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-mobile:hover:not(:disabled) {
+  background: #f9fafb;
+}
+
+.btn-mobile:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .btn-active {
   background: #3b82f6;
   color: white;
@@ -532,11 +720,22 @@ canvas {
   background: #2563eb;
 }
 
+/* Desktop select */
 .select {
   padding: 0.5rem;
   border: 1px solid #e5e7eb;
   border-radius: 0.375rem;
   background: white;
+}
+
+/* Mobile select */
+.select-mobile {
+  padding: 0.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background: white;
+  font-size: 0.875rem;
+  min-height: 44px;
 }
 
 .loading,
@@ -559,6 +758,29 @@ canvas {
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Responsive text sizes */
+@media (max-width: 640px) {
+  .text-sm {
+    font-size: 0.75rem;
+  }
+
+  .font-medium {
+    font-weight: 500;
+  }
+}
+
+/* Touch-friendly improvements */
+@media (max-width: 1023px) {
+  .btn-mobile:active {
+    transform: scale(0.95);
+  }
+
+  .select-mobile:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
   }
 }
 </style>
